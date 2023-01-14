@@ -1,4 +1,4 @@
-# Уровень "Middle"
+# Уровень "Middle" REST API
 
 ## *Spring проект "job4j_auth"*
 
