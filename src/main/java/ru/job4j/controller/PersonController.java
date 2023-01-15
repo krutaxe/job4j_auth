@@ -1,13 +1,23 @@
 package ru.job4j.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Person;
 import ru.job4j.service.PersonService;
+import ru.job4j.util.NoSuchException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.job4j.util.NotDeleteException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +25,9 @@ import java.util.Optional;
 @RequestMapping("/person")
 @AllArgsConstructor
 public class PersonController {
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(PersonController.class.getSimpleName());
+    private final ObjectMapper objectMapper;
     private final PersonService personService;
 
     @GetMapping("/")
@@ -25,10 +38,10 @@ public class PersonController {
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
         Optional<Person> person = personService.findById(id);
-        return new ResponseEntity<>(
-                person.orElse(new Person()),
-                person.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND
-        );
+        if (person.isEmpty()) {
+            throw new NoSuchException("There is no ID = " + id + " in DataBase");
+        }
+        return new ResponseEntity<>(person.get(), HttpStatus.OK);
     }
 
     @PostMapping("/")
@@ -50,13 +63,26 @@ public class PersonController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        Person person = new Person();
-        person.setId(id);
-        if (!personService.delete(person)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        Optional<Person> person = personService.findById(id);
+        if (person.isEmpty()) {
+            throw new NoSuchException("There is no ID = " + id + " in DataBase");
         }
-        personService.delete(person);
+        if (person.get().getLogin().equals("admin")) {
+            throw new NotDeleteException("Admin login cannot be deleted!");
+        }
+        personService.delete(person.get());
         return ResponseEntity.ok().build();
     }
 
+    @ExceptionHandler(value = {NotDeleteException.class})
+    public void exceptionHandler(NotDeleteException e, HttpServletResponse response)
+            throws IOException {
+        response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+        response.setContentType("application/json");
+        response.getWriter().write(objectMapper.writeValueAsString(new HashMap<>() { {
+            put("message", e.getMessage());
+            put("type", e.getClass());
+        }}));
+        LOGGER.error(e.getLocalizedMessage());
+    }
 }
