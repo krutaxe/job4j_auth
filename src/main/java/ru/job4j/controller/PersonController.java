@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Person;
-import ru.job4j.repository.PersonRepository;
 import ru.job4j.service.PersonService;
 
 import java.util.List;
@@ -41,6 +41,9 @@ public class PersonController {
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
+        if (!personService.update(person)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         personService.create(person);
         return ResponseEntity.ok().build();
     }
@@ -49,6 +52,9 @@ public class PersonController {
     public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
         person.setId(id);
+        if (!personService.delete(person)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         personService.delete(person);
         return ResponseEntity.ok().build();
     }

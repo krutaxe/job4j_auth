@@ -14,7 +14,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public List<Person> findAll() {
-        return (List<Person>) personRepository.findAll();
+        return personRepository.findAll();
     }
 
     public Optional<Person> findById(int id) {
@@ -22,11 +22,22 @@ public class PersonService {
     }
 
     public Person create(Person person) {
-        personRepository.save(person);
-        return person;
+        return personRepository.save(person);
     }
 
-    public void delete(Person person) {
+    public boolean update(Person person) {
+        if (!personRepository.existsById(person.getId())) {
+            return false;
+        }
+        personRepository.save(person);
+        return true;
+    }
+
+    public boolean delete(Person person) {
+        if (!personRepository.existsById(person.getId())) {
+            return false;
+        }
         personRepository.delete(person);
+        return true;
     }
 }
