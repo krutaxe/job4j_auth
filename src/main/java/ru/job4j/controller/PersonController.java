@@ -57,7 +57,6 @@ public class PersonController {
         if (!personService.update(person)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        personService.create(person);
         return ResponseEntity.ok().build();
     }
 
