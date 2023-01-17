@@ -51,12 +51,17 @@ public class PersonService implements UserDetailsService {
         return true;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+    public Person findByLogin(String login) {
         Person person = personRepository.findByLogin(login);
         if (person == null) {
             throw new UsernameNotFoundException(login);
         }
+        return person;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        Person person = findByLogin(login);
         return new User(person.getLogin(), person.getPassword(), emptyList());
     }
 }

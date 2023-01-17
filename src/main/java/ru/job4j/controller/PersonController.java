@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Person;
+import ru.job4j.dto.PersonDTO;
 import ru.job4j.service.PersonService;
 import ru.job4j.util.NoSuchException;
 import ru.job4j.util.NotDeleteException;
@@ -66,6 +67,14 @@ public class PersonController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .contentLength(content.length)
                 .body(content);
+    }
+
+    @PatchMapping("/")
+    public ResponseEntity<String> updatePassword(@RequestBody PersonDTO personDTO) {
+       Person person =  personService.findByLogin(personDTO.getLogin());
+       person.setPassword(personDTO.getPassword());
+       personService.update(person);
+       return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
