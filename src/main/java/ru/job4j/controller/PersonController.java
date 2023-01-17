@@ -16,6 +16,7 @@ import ru.job4j.util.NoSuchException;
 import ru.job4j.util.NotDeleteException;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,7 +51,7 @@ public class PersonController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Person> create(@RequestBody Person person) {
+    public ResponseEntity<Person> create(@RequestBody @Valid Person person) {
         return new ResponseEntity<>(
                 personService.create(person),
                 HttpStatus.CREATED
@@ -58,7 +59,7 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<byte[]> update(@RequestBody Person person) throws IOException {
+    public ResponseEntity<byte[]> update(@RequestBody @Valid Person person) throws IOException {
         var content = Files.readAllBytes(Path.of("./test.jpeg"));
         if (!personService.update(person)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -70,7 +71,7 @@ public class PersonController {
     }
 
     @PatchMapping("/")
-    public ResponseEntity<String> updatePassword(@RequestBody PersonDTO personDTO) {
+    public ResponseEntity<String> updatePassword(@RequestBody @Valid PersonDTO personDTO) {
        Person person =  personService.findByLogin(personDTO.getLogin());
        person.setPassword(personDTO.getPassword());
        personService.update(person);
