@@ -14,16 +14,16 @@ import javax.sql.DataSource;
 public class Job4jAuthApplication extends SpringBootServletInitializer {
 
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(Job4jAuthApplication.class);
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Job4jAuthApplication.class);
     }
 
     @Bean
-    public SpringLiquibase liquibase(DataSource dataSource) {
+    public SpringLiquibase liquibase(DataSource ds) {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setChangeLog("classpath:liquibase-changeLog.xml");
-        liquibase.setDataSource(dataSource);
-        return  liquibase;
+        liquibase.setDataSource(ds);
+        return liquibase;
     }
 
     @Bean
