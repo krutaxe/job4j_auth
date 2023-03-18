@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION first()
 $$
 BEGIN
     UPDATE products
-    SET price = price + price * 0.18;
+    SET price = price + price * 0.18
+    WHERE id = (SELECT id FROM inserted);
     RETURN new;
 END;
 $$
@@ -24,6 +25,7 @@ $$
 CREATE TRIGGER first_trigger
     AFTER INSERT
     ON products
+    REFERENCING NEW TABLE AS inserted
     FOR EACH STATEMENT
 EXECUTE PROCEDURE first();
 
