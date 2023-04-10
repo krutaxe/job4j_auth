@@ -44,18 +44,16 @@ public class PersonController {
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
         Optional<Person> person = personService.findById(id);
-        if (person.isEmpty()) {
-            throw new NoSuchException("There is no ID = " + id + " in DataBase");
+       if (person.isEmpty()) {
+         throw new NoSuchException("There is no ID = " + id + " in DataBase");
         }
         return new ResponseEntity<>(person.get(), HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody @Valid Person person) {
-        return new ResponseEntity<>(
-                personService.create(person),
-                HttpStatus.CREATED
-        );
+
+        return new ResponseEntity<>(personService.create(person), HttpStatus.CREATED);
     }
 
     @PutMapping("/")
@@ -103,4 +101,5 @@ public class PersonController {
         }}));
         LOGGER.error(e.getLocalizedMessage());
     }
+
 }
