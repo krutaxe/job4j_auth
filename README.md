@@ -37,7 +37,7 @@
        4.Выполнить команду: mvn spring-boot:run
        5.Перейти по ссылке: http://localhost:8080/person/
        
-      Запуск в контейнере с использованием docker-compose.
-      	1. Создать образ командой `docker build -t auth . `.
-      	2. Запустите контейнеры БД и приложения командой `docker-compose up`.
+      Запуск в контейнере с использованием docker-compose(Multi-stage build).
+        1. Создайте образ командой `docker-compose build`
+        2. Запустите образы БД и приложения командой `docker-compose up -d`  
       	3. Остановить контейнеры БД и приложения командой `docker-compose down`.

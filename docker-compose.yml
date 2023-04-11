@@ -30,7 +30,11 @@ services:
 
   app:
 
-    image: auth
+    build:
+
+     context: .
+
+     dockerfile: Dockerfile
 
     container_name: auth
 
