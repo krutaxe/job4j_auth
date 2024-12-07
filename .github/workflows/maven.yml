@@ -10,7 +10,7 @@ name: Run k6 Tests
 
 on:
   schedule:
-    - cron: '* * * * *'  # Запуск каждую минуту
+    - cron: '6 * * * *'
 
 jobs:
   test:
