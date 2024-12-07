@@ -2,8 +2,7 @@ name: Test Cron
 
 on:
   schedule:
-    - cron: '* * * * *'  # Запуск каждую минуту
-  push:
+    - cron: '5 * * * *'
 
 jobs:
   test:
