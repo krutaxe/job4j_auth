@@ -1,0 +1,10 @@
+on:
+  schedule:
+    - cron: '* * * * *'  # Запуск каждую минуту
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run a test command
+        run: echo "Cron job executed!"
