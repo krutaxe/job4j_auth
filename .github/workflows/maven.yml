@@ -9,10 +9,9 @@
 name: Run k6 Tests
 
 on:
+  push:
   schedule:
-    - cron: '*/5 * * * *'
-  
-
+    - cron: "*/5 * * * *"
 jobs:
   build:
 
