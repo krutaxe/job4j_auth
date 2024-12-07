@@ -1,0 +1,13 @@
+name: Test new Branch
+
+on:
+  push:
+  schedule:
+    - cron: '*/10 * * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run a test command
+        run: echo "Cron job executed!"
